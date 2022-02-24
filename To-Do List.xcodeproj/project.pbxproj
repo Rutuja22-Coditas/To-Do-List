@@ -16,6 +16,9 @@
 		7E628CA027C74AB3005027D5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E628C9E27C74AB3005027D5 /* LaunchScreen.storyboard */; };
 		7E628CAB27C74AB4005027D5 /* To_Do_ListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E628CAA27C74AB4005027D5 /* To_Do_ListTests.swift */; };
 		7E628CB627C74AB4005027D5 /* To_Do_ListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E628CB527C74AB4005027D5 /* To_Do_ListUITests.swift */; };
+		7E628CC827C77A09005027D5 /* ToDoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E628CC727C77A09005027D5 /* ToDoData.swift */; };
+		7ED0BA1F27C77E2600527F30 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED0BA1D27C77E2600527F30 /* TableViewCell.swift */; };
+		7ED0BA2027C77E2600527F30 /* TableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ED0BA1E27C77E2600527F30 /* TableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +54,9 @@
 		7E628CB127C74AB4005027D5 /* To-Do ListUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "To-Do ListUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E628CB527C74AB4005027D5 /* To_Do_ListUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = To_Do_ListUITests.swift; sourceTree = "<group>"; };
 		7E628CB727C74AB4005027D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7E628CC727C77A09005027D5 /* ToDoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoData.swift; sourceTree = "<group>"; };
+		7ED0BA1D27C77E2600527F30 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		7ED0BA1E27C77E2600527F30 /* TableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +107,7 @@
 		7E628C8F27C74AB2005027D5 /* To-Do List */ = {
 			isa = PBXGroup;
 			children = (
+				7E628CCC27C77A97005027D5 /* Model */,
 				7E628C9027C74AB2005027D5 /* AppDelegate.swift */,
 				7E628C9227C74AB2005027D5 /* SceneDelegate.swift */,
 				7E628C9427C74AB2005027D5 /* ViewController.swift */,
@@ -109,6 +116,8 @@
 				7E628C9E27C74AB3005027D5 /* LaunchScreen.storyboard */,
 				7E628CA127C74AB3005027D5 /* Info.plist */,
 				7E628C9927C74AB2005027D5 /* To_Do_List.xcdatamodeld */,
+				7ED0BA1D27C77E2600527F30 /* TableViewCell.swift */,
+				7ED0BA1E27C77E2600527F30 /* TableViewCell.xib */,
 			);
 			path = "To-Do List";
 			sourceTree = "<group>";
@@ -129,6 +138,14 @@
 				7E628CB727C74AB4005027D5 /* Info.plist */,
 			);
 			path = "To-Do ListUITests";
+			sourceTree = "<group>";
+		};
+		7E628CCC27C77A97005027D5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7E628CC727C77A09005027D5 /* ToDoData.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -235,6 +252,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E628CA027C74AB3005027D5 /* LaunchScreen.storyboard in Resources */,
+				7ED0BA2027C77E2600527F30 /* TableViewCell.xib in Resources */,
 				7E628C9D27C74AB3005027D5 /* Assets.xcassets in Resources */,
 				7E628C9827C74AB2005027D5 /* Main.storyboard in Resources */,
 			);
@@ -261,8 +279,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E628CC827C77A09005027D5 /* ToDoData.swift in Sources */,
 				7E628C9527C74AB2005027D5 /* ViewController.swift in Sources */,
 				7E628C9127C74AB2005027D5 /* AppDelegate.swift in Sources */,
+				7ED0BA1F27C77E2600527F30 /* TableViewCell.swift in Sources */,
 				7E628C9327C74AB2005027D5 /* SceneDelegate.swift in Sources */,
 				7E628C9B27C74AB2005027D5 /* To_Do_List.xcdatamodeld in Sources */,
 			);
