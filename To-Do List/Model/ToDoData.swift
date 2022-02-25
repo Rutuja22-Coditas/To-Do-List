@@ -11,3 +11,5 @@ struct ToDoData{
     var date : String
     var task : [String]
 }
+
+var toDoDataArray = [ToDoData]()
