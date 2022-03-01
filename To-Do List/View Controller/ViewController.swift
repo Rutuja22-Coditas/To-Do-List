@@ -11,12 +11,15 @@ import UIKit
 class ViewController: UITabBarController {
     
     let addButton = UIButton(type: .custom)
+    let tabBarItemsColor = UIColor(red: 0/255.0, green: 197/255.0, blue: 254/255.0, alpha: 1)
+    
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpAddButton()
         tabBar.backgroundColor = UIColor.white
-        tabBarItem.badgeColor = UIColor(red: 0/255.0, green: 197/255.0, blue: 254/255.0, alpha: 1)
+        tabBarItem.badgeColor = tabBarItemsColor
     }
     
     func setUpAddButton(){
@@ -30,7 +33,7 @@ class ViewController: UITabBarController {
         addButton.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
 
         
-        addButton.backgroundColor = UIColor(red: 0/255.0, green: 197/255.0, blue: 254/255.0, alpha: 1)
+        addButton.backgroundColor = tabBarItemsColor
         
         addButton.setImage(UIImage(systemName: "plus"), for: .normal)
         addButton.tintColor = .white
@@ -43,31 +46,36 @@ class ViewController: UITabBarController {
     }
     
     @objc func addButtonAction(sender: UIButton){
-        var textField = UITextField()
         
-        let alert = UIAlertController(title: "Add New To-Do Task", message: "", preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "Add", style: .default) { (action) in
-            
-            print("textInTxtFld",textField.text!)
-        }
-        
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        
-        alert.addTextField { (textFieldForPriority) in
-            textFieldForPriority.placeholder = "Set Priority"
-            textField = textFieldForPriority
-        }
-        
-        alert.addAction(action)
-        alert.addAction(cancel)
-        present(alert, animated: true, completion: nil)
+        let vC = UIStoryboard(name: "Main", bundle: nil)
+                let alertVC = vC.instantiateViewController(identifier: "AlertViewController") as? AlertViewController
+        alertVC?.modalPresentationStyle = .automatic
+                present(alertVC!, animated: true, completion: nil)
+//        var textField = UITextField()
+////
+//        let alert = UIAlertController(title: "Add New To-Do Task", message: "", preferredStyle: .alert)
+//
+//        let action = UIAlertAction(title: "Add", style: .default) { (action) in
+//
+//            print("textInTxtFld",textField.text!)
+//        }
+//
+//        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+//
+//        alert.addTextField { (textFieldForPriority) in
+//            textFieldForPriority.placeholder = "Set Priority"
+//            textField = textFieldForPriority
+//        }
+//
+//        alert.addAction(action)
+//        alert.addAction(cancel)
+//        present(alert, animated: true, completion: nil)
     }
    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         // I added this line
-        UITabBar.appearance().tintColor = UIColor(red: 0/255.0, green: 197/255.0, blue: 254/255.0, alpha: 1)
+        UITabBar.appearance().tintColor = tabBarItemsColor
 
         return true
     }
