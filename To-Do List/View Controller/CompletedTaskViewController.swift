@@ -6,10 +6,6 @@
 //
 
 import UIKit
-import CoreData
-
-var toDoDataArray = [ToDoData]()
-let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
 
 class CompletedTaskViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -17,42 +13,32 @@ class CompletedTaskViewController: UIViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var tableView: UITableView!
     var editTxtFld : UITextField?
     
-    let request : NSFetchRequest<ToDoData> = ToDoData.fetchRequest()
-  
-
+    var date : Date?
     override func viewDidLoad() {
         super.viewDidLoad()
         dataAdd()
         setUpUI()
         tableView.register(UINib(nibName: TableViewCell.identifier, bundle: nil), forCellReuseIdentifier: TableViewCell.identifier)
-        
+    }
+
+    func dataAdd(){
+        dateFormatter.dateStyle = .medium
+        dateFormatter.dateFormat = "EEEE, dd MM yyyy"
+        toDoDataArray = [ToDoData(date: dateFormatter.date(from: "Monday, 10 05 2011")!, priority: "High", task: "Buy bread")]
+        let filterData = toDoDataArray.filter{$0.date == date}
+        print("filteredData",filterData)
+       
     }
     
     func setUpUI(){
         tableView.sectionHeaderHeight = 60
     }
+  
     
-    func dataAdd(){
-//        toDoDataArray = [
-//            ToDoData(date: "Today, 24 Feb 2022", taskData: [PriorityAndTask(priority: "High", task: "Buy bread"), PriorityAndTask(priority: "Low", task: "Buy Egg"),PriorityAndTask(priority: "Low", task: "Buy xyz")]), ToDoData(date: "Thursday, 28 Feb 2022", taskData: [PriorityAndTask(priority: "Low", task: "abcd")])
-//        ]
-
-        do{
-            let result = try context.fetch(request)
-            for i in result{
-                toDoDataArray.append(i)
-                print("!!!!!!!", toDoDataArray)
-            }
-        }
-        catch{
-            print("error",error)
-        }
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        print("sectionCount",toDoDataArray.count)
-        return 1
-    }
+//    func numberOfSections(in tableView: UITableView) -> Int {
+//        print("sectionCount",toDoDataArray.count)
+//        return 1
+//    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return toDoDataArray.count
         
@@ -60,8 +46,8 @@ class CompletedTaskViewController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.identifier, for: indexPath) as? TableViewCell
-        //cell?.taskLbl.text = toDoDataArray[indexPath.section].taskData[indexPath.row].task
         cell?.taskLbl.text = toDoDataArray[indexPath.row].task
+        //cell?.taskLbl.text = toDoDataArray[indexPath.row].task
         return cell!
     }
 //    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -111,7 +97,6 @@ class CompletedTaskViewController: UIViewController, UITableViewDelegate, UITabl
 
         let delete = UIContextualAction(style: .destructive, title: "Delete") { (_, _, _) in
             print("delete")
-            context.delete(toDoDataArray[indexPath.row])
             tableView.deleteRows(at: [indexPath], with: .automatic)
             //toDoDataArray[indexPath.section].taskData.remove(at: indexPath.row)
             tableView.reloadData()

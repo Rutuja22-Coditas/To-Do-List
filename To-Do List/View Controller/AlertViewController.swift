@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UITextViewDelegate {
 
@@ -22,25 +22,25 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     @IBOutlet weak var dateTxtFld: UITextField!
     @IBOutlet weak var datePicker: UIDatePicker!
-//    @IBAction func datePickerSelected(_ sender: UIDatePicker) {
-//        let dateFormatter = DateFormatter()
-//        dateTxtFld.text = dateFormatter.string(from: datePicker.date)
-//
-//    }
     
     @IBOutlet weak var okButtn: UIButton!
     @IBOutlet weak var cancelButtn: UIButton!
     
     var dropDownArray = ["Low","Medium","High"]
     let dateFormatter = DateFormatter()
-    var date = ""
+    
+    var date : Date? = nil
     var task = ""
     var priority = ""
-
+    let realm = try! Realm()
+    
+    var realmData = Task()
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         dateFormatter.dateStyle = .medium
         dateFormatter.dateFormat = "EEEE, dd MM yyyy"
         
@@ -50,14 +50,16 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         
         alertUI()
         setDatePicker()
-
+        
         cancelButtn.addTarget(self, action: #selector(cancelButtnCliked), for: .touchUpInside)
-        okButtn.addTarget(self, action: #selector(dataSave), for: .touchUpInside)
-        datePicker.isHidden = true
+        okButtn.addTarget(self, action: #selector(okButtnClicked), for: .touchUpInside)
         
-        
-        //fetchData()
-
+        print("realm", Realm.Configuration.defaultConfiguration.fileURL!)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        setToolBarForDatePicker()
     }
     
     func alertUI(){
@@ -67,7 +69,9 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         addTaskTxtV.layer.borderWidth = 0.5
         addTaskTxtV.layer.borderColor = UIColor.systemGray4.cgColor
         addTaskTxtV.layer.cornerRadius = 5
-        
+        priorityPickerView.backgroundColor = .white
+        priorityPickerView.layer.cornerRadius = 5
+                
     }
     
     @objc func cancelButtnCliked(){
@@ -90,28 +94,26 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         priorityTxtFld.text = dropDownArray[row]
         pickerView.isHidden = true
-        dateTxtFld.isHidden = false
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == priorityTxtFld{
             priority = priorityTxtFld.text!
             print("priority",priority)
-            dateTxtFld.isHidden = true
             datePicker.isHidden = true
             priorityPickerView.isHidden = false
         }
         else{
-            dateTxtFld.isHidden = false
             priorityPickerView.isHidden = true
         }
         
         if textField == dateTxtFld{
-            date = dateTxtFld.text!
-            print("date",date)
+//            dateTxtFld.text = dateFormatter.string(from: datePicker.date)
+//            print("date", dateTxtFld.text!)
             datePicker.isHidden = false
+            dateTxtFld.resignFirstResponder()
+
         }
-        dateTxtFld.resignFirstResponder()
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
@@ -127,63 +129,81 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         
     }
     func setDatePicker(){
+        //let toolBar = UIToolbar()
+        //toolBar.sizeToFit()
         dateTxtFld.inputView = datePicker
         datePicker.locale = .current
-        datePicker.preferredDatePickerStyle = .compact
+        datePicker.preferredDatePickerStyle = .wheels
         datePicker.date = Date()
-        dateTxtFld.text = "\(dateFormatter.string(from: datePicker.date))"
+        datePicker.backgroundColor = .white
+        datePicker.layer.cornerRadius = 10
+        //dateTxtFld.inputAccessoryView = toolBar
+
+        //ToolbarPiker()
+
+        //let doneButtn = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(doneButtnClkOnDatePicker))
+        //let doneButtn = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneButtnClkOnDatePicker))
+        //let cancelButtn = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelClkedOnDatePicker))
+        //toolBar.setItems([doneButtn,cancelButtn], animated: true)
+        //toolBar.backgroundColor = .black
+        //dateTxtFld.text = "\(dateFormatter.string(from: datePicker.date))"
         datePicker.addTarget(self, action: #selector(dateCahnge), for: .valueChanged)
     }
-    
+    func setToolBarForDatePicker() {
+
+        let toolBar = UIToolbar()
+
+        toolBar.barStyle = UIBarStyle.default
+        toolBar.isTranslucent = true
+        toolBar.tintColor = UIColor.black
+        toolBar.sizeToFit()
+
+        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItem.Style.plain, target: self, action: #selector(doneButtnClkOnDatePicker))
+        let cancelButtn = UIBarButtonItem(barButtonSystemItem: .cancel, target: nil, action: nil)
+
+        toolBar.setItems([doneButton, cancelButtn], animated: true)
+        toolBar.isUserInteractionEnabled = true
+        
+        dateTxtFld.inputAccessoryView = toolBar
+        
+    }
+    @objc func doneButtnClkOnDatePicker(){
+        dateTxtFld.text = dateFormatter.string(from: datePicker.date)
+        print("selected date",dateTxtFld.text!)
+        self.view.endEditing(true)
+    }
+    @objc func cancelClkedOnDatePicker(){
+        print("cancel")
+    }
     @objc func dateCahnge(){
-//        dateFormatter.dateStyle = .medium
-//        dateFormatter.dateFormat = "EEEE, dd MM yyyy"
+        dateFormatter.dateStyle = .medium
+        dateFormatter.dateFormat = "EEEE, dd MM yyyy"
         let date = dateFormatter.string(from: datePicker.date)
         dateTxtFld.text = date
+        print("after change", dateTxtFld.text!)
         datePicker.isHidden = true
     }
 
     
-    @objc func dataSave(){
-        let toDoTask = ToDoData(context: context)
-        
+    @objc func okButtnClicked(){
 
-        print("date",dateTxtFld.text!)
-        print("Priority",priorityTxtFld.text!)
-        print("task",addTaskTxtV.text!)
-
-        toDoTask.task = task
-        toDoTask.date = date
-        toDoTask.priority = priority
+        realmData.task = addTaskTxtV.text
+        realmData.priority = priorityTxtFld.text
         
-        saveTasks()
+        realmData.date = dateFormatter.date(from: dateTxtFld.text!)
+
+        try! realm.write{
+            realm.add(realmData)
+        }
+        
+        let results = realm.objects(Task.self)
+        print("result",results)
+
+        
         self.dismiss(animated: true, completion: nil)
     }
     
-    func saveTasks(){
-        do{
-            try context.save()
-            print("saved")
-        }
-        catch{
-            print("error in saving data",error)
-        }
-    }
-    
-//    func fetchData(){
-//        let request : NSFetchRequest<ToDoData> = ToDoData.fetchRequest()
-//        do{
-//            let result = try context.fetch(request)
-//            print("result",result)
-//            for i in result{
-//                print(i.task!)
-//            }
-//        }
-//        catch{
-//            print("error in fetching data",error )
-//        }
-//
-//    }
+  
 }
 
 

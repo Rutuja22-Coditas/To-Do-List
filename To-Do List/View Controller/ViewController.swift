@@ -13,8 +13,6 @@ class ViewController: UITabBarController {
     let addButton = UIButton(type: .custom)
     let tabBarItemsColor = UIColor(red: 0/255.0, green: 197/255.0, blue: 254/255.0, alpha: 1)
     
-   
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpAddButton()
