@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 struct ToDoData{
     var date : Date
@@ -13,5 +14,4 @@ struct ToDoData{
     var task : String
 }
 
-var toDoDataArray = [ToDoData]()
-let dateFormatter = DateFormatter()
+

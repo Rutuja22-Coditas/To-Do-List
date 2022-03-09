@@ -4,6 +4,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -16,36 +17,55 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="42"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nz3-d2-V3u">
-                        <rect key="frame" x="16" y="8" width="26" height="26"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="26" id="Jqm-JA-1aU"/>
-                            <constraint firstAttribute="height" constant="26" id="tma-dH-J1R"/>
-                        </constraints>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="smu-N2-c7l">
-                        <rect key="frame" x="50" y="0.0" width="254" height="42"/>
+                        <rect key="frame" x="62" y="0.0" width="258" height="42"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="258" id="4Ia-yY-Rwm"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nz3-d2-V3u">
+                        <rect key="frame" x="24" y="8" width="26" height="26"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="26" id="CMF-NX-ZgQ"/>
+                            <constraint firstAttribute="width" constant="26" id="R1D-7S-LjA"/>
+                        </constraints>
+                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zY8-ty-0iD">
+                        <rect key="frame" x="8" y="6" width="8" height="30"/>
+                        <color key="backgroundColor" systemColor="systemRedColor"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="8" id="Hbn-mJ-2ku"/>
+                        </constraints>
+                    </view>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="smu-N2-c7l" secondAttribute="trailing" constant="16" id="17O-y6-nHC"/>
-                    <constraint firstAttribute="bottom" secondItem="nz3-d2-V3u" secondAttribute="bottom" constant="8" id="51n-3D-nXQ"/>
-                    <constraint firstItem="smu-N2-c7l" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="LPt-V3-XeH"/>
-                    <constraint firstAttribute="bottom" secondItem="smu-N2-c7l" secondAttribute="bottom" id="PXt-d9-lFz"/>
-                    <constraint firstItem="nz3-d2-V3u" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="bUi-hG-xRL"/>
-                    <constraint firstItem="nz3-d2-V3u" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="neD-Ny-vNL"/>
-                    <constraint firstItem="smu-N2-c7l" firstAttribute="leading" secondItem="nz3-d2-V3u" secondAttribute="trailing" constant="8" id="pg8-5j-scV"/>
+                    <constraint firstItem="zY8-ty-0iD" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="6" id="0qe-5m-fG9"/>
+                    <constraint firstAttribute="bottom" secondItem="zY8-ty-0iD" secondAttribute="bottom" constant="6" id="4BN-Gk-8ki"/>
+                    <constraint firstAttribute="trailing" secondItem="smu-N2-c7l" secondAttribute="trailing" id="5PT-Gi-vFB"/>
+                    <constraint firstItem="smu-N2-c7l" firstAttribute="leading" secondItem="nz3-d2-V3u" secondAttribute="trailing" constant="12" id="8jG-UC-Fxc"/>
+                    <constraint firstItem="smu-N2-c7l" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="Ane-Bw-gL6"/>
+                    <constraint firstAttribute="bottom" secondItem="nz3-d2-V3u" secondAttribute="bottom" constant="8" id="EKv-0n-L1Q"/>
+                    <constraint firstItem="zY8-ty-0iD" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="T6s-iZ-Po8"/>
+                    <constraint firstAttribute="bottom" secondItem="smu-N2-c7l" secondAttribute="bottom" id="YJQ-zv-EWb"/>
+                    <constraint firstItem="nz3-d2-V3u" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="Yon-x6-yIf"/>
+                    <constraint firstItem="nz3-d2-V3u" firstAttribute="leading" secondItem="zY8-ty-0iD" secondAttribute="trailing" constant="8" id="ypg-kl-H99"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="checkmarkImgV" destination="nz3-d2-V3u" id="aCS-P6-HZX"/>
+                <outlet property="priorityView" destination="zY8-ty-0iD" id="e72-kI-sPC"/>
                 <outlet property="taskLbl" destination="smu-N2-c7l" id="CRd-2j-t4f"/>
             </connections>
             <point key="canvasLocation" x="140.57971014492756" y="76.339285714285708"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>

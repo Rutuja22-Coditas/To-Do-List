@@ -26,21 +26,43 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     @IBOutlet weak var okButtn: UIButton!
     @IBOutlet weak var cancelButtn: UIButton!
     
+    @IBOutlet weak var buttonsForDatePicker: UIView!
+    
+    @IBAction func doneButtnOfDatePicker(_ sender: UIButton) {
+//        dateTxtFld.text = dateFormatter.string(from: datePicker.date)
+//        print("selected date",dateTxtFld.text!)
+//        self.view.endEditing(true)
+        
+        dateFormatter.dateStyle = .medium
+        dateFormatter.dateFormat = "EEEE, dd MM yyyy"
+        let date = dateFormatter.string(from: datePicker.date)
+        dateTxtFld.text = date
+       // print("after change", dateTxtFld.text!)
+        datePicker.isHidden = true
+        buttonsForDatePicker.isHidden = true
+    }
+    
+    @IBAction func cancelButtonOfDatePicker(_ sender: UIButton) {
+        buttonsForDatePicker.isHidden = true
+        datePicker.isHidden = true
+    }
+    
     var dropDownArray = ["Low","Medium","High"]
     let dateFormatter = DateFormatter()
     
-    var date : Date? = nil
+    //var date : Date? = nil
     var task = ""
     var priority = ""
-    let realm = try! Realm()
     
     var realmData = Task()
+    let realm = try! Realm()
+
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        buttonsForDatePicker.isHidden = true
         dateFormatter.dateStyle = .medium
         dateFormatter.dateFormat = "EEEE, dd MM yyyy"
         
@@ -55,11 +77,6 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         okButtn.addTarget(self, action: #selector(okButtnClicked), for: .touchUpInside)
         
         print("realm", Realm.Configuration.defaultConfiguration.fileURL!)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        setToolBarForDatePicker()
     }
     
     func alertUI(){
@@ -110,6 +127,7 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         if textField == dateTxtFld{
 //            dateTxtFld.text = dateFormatter.string(from: datePicker.date)
 //            print("date", dateTxtFld.text!)
+            buttonsForDatePicker.isHidden = false
             datePicker.isHidden = false
             dateTxtFld.resignFirstResponder()
 
@@ -129,82 +147,79 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         
     }
     func setDatePicker(){
-        //let toolBar = UIToolbar()
-        //toolBar.sizeToFit()
         dateTxtFld.inputView = datePicker
         datePicker.locale = .current
         datePicker.preferredDatePickerStyle = .wheels
         datePicker.date = Date()
         datePicker.backgroundColor = .white
         datePicker.layer.cornerRadius = 10
-        //dateTxtFld.inputAccessoryView = toolBar
-
-        //ToolbarPiker()
-
-        //let doneButtn = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(doneButtnClkOnDatePicker))
-        //let doneButtn = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneButtnClkOnDatePicker))
-        //let cancelButtn = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelClkedOnDatePicker))
-        //toolBar.setItems([doneButtn,cancelButtn], animated: true)
-        //toolBar.backgroundColor = .black
-        //dateTxtFld.text = "\(dateFormatter.string(from: datePicker.date))"
-        datePicker.addTarget(self, action: #selector(dateCahnge), for: .valueChanged)
-    }
-    func setToolBarForDatePicker() {
-
-        let toolBar = UIToolbar()
-
-        toolBar.barStyle = UIBarStyle.default
-        toolBar.isTranslucent = true
-        toolBar.tintColor = UIColor.black
-        toolBar.sizeToFit()
-
-        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItem.Style.plain, target: self, action: #selector(doneButtnClkOnDatePicker))
-        let cancelButtn = UIBarButtonItem(barButtonSystemItem: .cancel, target: nil, action: nil)
-
-        toolBar.setItems([doneButton, cancelButtn], animated: true)
-        toolBar.isUserInteractionEnabled = true
-        
-        dateTxtFld.inputAccessoryView = toolBar
         
     }
-    @objc func doneButtnClkOnDatePicker(){
-        dateTxtFld.text = dateFormatter.string(from: datePicker.date)
-        print("selected date",dateTxtFld.text!)
-        self.view.endEditing(true)
-    }
-    @objc func cancelClkedOnDatePicker(){
-        print("cancel")
-    }
-    @objc func dateCahnge(){
-        dateFormatter.dateStyle = .medium
-        dateFormatter.dateFormat = "EEEE, dd MM yyyy"
-        let date = dateFormatter.string(from: datePicker.date)
-        dateTxtFld.text = date
-        print("after change", dateTxtFld.text!)
-        datePicker.isHidden = true
-    }
 
-    
     @objc func okButtnClicked(){
-
         realmData.task = addTaskTxtV.text
         realmData.priority = priorityTxtFld.text
+        //print("to save date",dateTxtFld.text!)
+        dateFormatter.dateStyle = .medium
+        dateFormatter.dateFormat = "EEEE, dd MM yyyy"
+        dateFormatter.timeZone = TimeZone.current
+                
+        let dateInString = dateFormatter.date(from: dateTxtFld.text!)!
+        realmData.date = dateInString
         
-        realmData.date = dateFormatter.date(from: dateTxtFld.text!)
-
+        //print(realmData.date!)
         try! realm.write{
             realm.add(realmData)
         }
-        
-        let results = realm.objects(Task.self)
-        print("result",results)
-
-        
+//        let results = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true)
+//
+//        for i in results{
+//            let convertedDate = dateFormatter.string(from: i.date!)
+//            print("convertedDate",convertedDate)
+//        }
+//
+//        let a = results.sorted(by: {($0.date)!.compare($1.date!) == .orderedAscending})
+//        print("$$$$$$",a)
+        //dataSorting()
         self.dismiss(animated: true, completion: nil)
+        
+        
+    }
+
+    func dataSorting(){
+        let realm = try! Realm()
+            var groupedItems = [Date:Results<Task>]()
+            var itemDates = [Date]()
+        
+        let items = realm.objects(Task.self)
+               //Find each unique day for which an Item exists in your Realm
+               itemDates = items.reduce(into: [Date](), { results, currentItem in
+                   let date = currentItem.date!
+                   let beginningOfDay = Calendar.current.date(from: DateComponents(year: Calendar.current.component(.year, from: date), month: Calendar.current.component(.month, from: date), day: Calendar.current.component(.day, from: date), hour: 0, minute: 0, second: 0))!
+                   let endOfDay = Calendar.current.date(from: DateComponents(year: Calendar.current.component(.year, from: date), month: Calendar.current.component(.month, from: date), day: Calendar.current.component(.day, from: date), hour: 23, minute: 59, second: 59))!
+                   //Only add the date if it doesn't exist in the array yet
+                   if !results.contains(where: { addedDate->Bool in
+                       return addedDate >= beginningOfDay && addedDate <= endOfDay
+                   }) {
+                       results.append(beginningOfDay)
+                   }
+               })
+               //Filter each Item in realm based on their date property and assign the results to the dictionary
+               groupedItems = itemDates.reduce(into: [Date:Results<Task>](), { results, date in
+                   let beginningOfDay = Calendar.current.date(from: DateComponents(year: Calendar.current.component(.year, from: date), month: Calendar.current.component(.month, from: date), day: Calendar.current.component(.day, from: date), hour: 0, minute: 0, second: 0))!
+                   let endOfDay = Calendar.current.date(from: DateComponents(year: Calendar.current.component(.year, from: date), month: Calendar.current.component(.month, from: date), day: Calendar.current.component(.day, from: date), hour: 23, minute: 59, second: 59))!
+                   results[beginningOfDay] = realm.objects(Task.self).filter("date >= %@ AND date <= %@", beginningOfDay, endOfDay)
+               })
+        
+        print("grouped items",groupedItems)
     }
     
-  
+    
+    func validationForTxtFields(textField: UITextField){
+        if textField.text == ""{
+            
+        }
+    }
 }
-
 
 
