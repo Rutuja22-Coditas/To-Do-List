@@ -33,7 +33,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U9B-rA-P7Y">
-                                <rect key="frame" x="35" y="74" width="344" height="400"/>
+                                <rect key="frame" x="35" y="164" width="344" height="400"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Task" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Tn-Wg-GPq">
                                         <rect key="frame" x="84" y="19" width="177" height="52"/>
@@ -102,7 +102,7 @@
                                             <constraint firstAttribute="height" constant="24" id="ks4-51-bpJ"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Required!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XhY-RM-iXt">
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Required!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XhY-RM-iXt">
                                         <rect key="frame" x="8" y="238" width="62" height="18"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="18" id="XHc-JC-a3p"/>
@@ -111,7 +111,7 @@
                                         <color key="textColor" systemColor="systemRedColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Required!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fdb-bp-O3j">
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Required!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fdb-bp-O3j">
                                         <rect key="frame" x="8" y="174" width="62" height="18"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="18" id="hQ1-qZ-RXp"/>
@@ -120,7 +120,7 @@
                                         <color key="textColor" systemColor="systemRedColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Required!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iQQ-ML-aE0">
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Required!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iQQ-ML-aE0">
                                         <rect key="frame" x="8" y="306" width="62" height="18"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="18" id="WHb-Rh-JR1"/>
@@ -172,9 +172,9 @@
                                 </connections>
                             </pickerView>
                             <datePicker hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" translatesAutoresizingMaskIntoConstraints="NO" id="Fs9-PE-cBc">
-                                <rect key="frame" x="30" y="642" width="354" height="200"/>
+                                <rect key="frame" x="30" y="692" width="354" height="150"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="200" id="HRj-8p-XLI"/>
+                                    <constraint firstAttribute="height" constant="150" id="HRj-8p-XLI"/>
                                 </constraints>
                                 <date key="minimumDate" timeIntervalSinceReferenceDate="-62446253008">
                                     <!--0022-03-01 10:36:32 +0000-->
@@ -187,25 +187,12 @@
                                 </userDefinedRuntimeAttributes>
                             </datePicker>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uYN-yf-GxT">
-                                <rect key="frame" x="30" y="586" width="354" height="56"/>
+                                <rect key="frame" x="30" y="652" width="354" height="40"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LAK-Yw-Nmi">
-                                        <rect key="frame" x="0.0" y="0.0" width="130" height="56"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="130" id="I45-Ed-pti"/>
-                                            <constraint firstAttribute="height" constant="56" id="OWT-rL-aE3"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <state key="normal" title="Cancel"/>
-                                        <connections>
-                                            <action selector="cancelButtonOfDatePicker:" destination="tEY-fm-xHt" eventType="touchUpInside" id="sns-H0-EzQ"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RQy-o5-ezj">
-                                        <rect key="frame" x="224" y="0.0" width="130" height="56"/>
+                                        <rect key="frame" x="244" y="0.0" width="110" height="38"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="130" id="5Xe-yJ-Exz"/>
-                                            <constraint firstAttribute="height" constant="56" id="fBh-Id-FJw"/>
+                                            <constraint firstAttribute="width" constant="110" id="dyQ-yq-gHh"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="Done"/>
@@ -213,16 +200,27 @@
                                             <action selector="doneButtnOfDatePicker:" destination="tEY-fm-xHt" eventType="touchUpInside" id="ML3-IL-PXF"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LAK-Yw-Nmi">
+                                        <rect key="frame" x="8" y="0.0" width="99" height="38"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="99" id="OIC-gu-Sm1"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="Cancel"/>
+                                        <connections>
+                                            <action selector="cancelButtonOfDatePicker:" destination="tEY-fm-xHt" eventType="touchUpInside" id="sns-H0-EzQ"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="56" id="1D1-uN-Lfh"/>
-                                    <constraint firstItem="LAK-Yw-Nmi" firstAttribute="top" secondItem="uYN-yf-GxT" secondAttribute="top" id="AJX-F3-3Qn"/>
-                                    <constraint firstAttribute="trailing" secondItem="RQy-o5-ezj" secondAttribute="trailing" id="O2b-4y-tFh"/>
-                                    <constraint firstAttribute="bottom" secondItem="RQy-o5-ezj" secondAttribute="bottom" id="Vva-BZ-H0M"/>
-                                    <constraint firstItem="RQy-o5-ezj" firstAttribute="top" secondItem="uYN-yf-GxT" secondAttribute="top" id="oj4-xI-pDX"/>
-                                    <constraint firstAttribute="bottom" secondItem="LAK-Yw-Nmi" secondAttribute="bottom" id="uZd-YJ-Nsz"/>
-                                    <constraint firstItem="LAK-Yw-Nmi" firstAttribute="leading" secondItem="uYN-yf-GxT" secondAttribute="leading" id="ujn-hs-qA4"/>
+                                    <constraint firstAttribute="height" constant="40" id="1D1-uN-Lfh"/>
+                                    <constraint firstItem="LAK-Yw-Nmi" firstAttribute="leading" secondItem="uYN-yf-GxT" secondAttribute="leadingMargin" id="6eN-OF-Uiq"/>
+                                    <constraint firstItem="RQy-o5-ezj" firstAttribute="top" secondItem="LAK-Yw-Nmi" secondAttribute="top" id="KPa-mv-ibl"/>
+                                    <constraint firstAttribute="bottom" secondItem="RQy-o5-ezj" secondAttribute="bottom" constant="2" id="NyM-Zf-y22"/>
+                                    <constraint firstItem="RQy-o5-ezj" firstAttribute="top" secondItem="uYN-yf-GxT" secondAttribute="top" id="O6q-H6-hNA"/>
+                                    <constraint firstAttribute="trailing" secondItem="RQy-o5-ezj" secondAttribute="trailing" id="OLt-Om-IHl"/>
+                                    <constraint firstItem="RQy-o5-ezj" firstAttribute="baseline" secondItem="LAK-Yw-Nmi" secondAttribute="firstBaseline" id="Xvv-z9-M1n"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -237,7 +235,7 @@
                             <constraint firstItem="U9B-rA-P7Y" firstAttribute="leading" secondItem="fQZ-RP-PKX" secondAttribute="leading" constant="35" id="24K-kf-WNm"/>
                             <constraint firstItem="Fs9-PE-cBc" firstAttribute="top" secondItem="uYN-yf-GxT" secondAttribute="bottom" id="960-cL-X6r"/>
                             <constraint firstItem="fQZ-RP-PKX" firstAttribute="trailing" secondItem="U9B-rA-P7Y" secondAttribute="trailing" constant="35" id="B7x-rA-C4q"/>
-                            <constraint firstItem="U9B-rA-P7Y" firstAttribute="top" secondItem="fQZ-RP-PKX" secondAttribute="top" constant="30" id="B81-Va-YcY"/>
+                            <constraint firstItem="U9B-rA-P7Y" firstAttribute="top" secondItem="fQZ-RP-PKX" secondAttribute="top" constant="120" id="B81-Va-YcY"/>
                             <constraint firstItem="uXF-lt-fmY" firstAttribute="leading" secondItem="fQZ-RP-PKX" secondAttribute="leading" constant="30" id="BM0-Nd-zhU"/>
                             <constraint firstItem="uYN-yf-GxT" firstAttribute="leading" secondItem="fQZ-RP-PKX" secondAttribute="leading" constant="30" id="InJ-68-TjH"/>
                             <constraint firstItem="fQZ-RP-PKX" firstAttribute="trailing" secondItem="uXF-lt-fmY" secondAttribute="trailing" constant="30" id="M9q-p3-bf1"/>
@@ -263,7 +261,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cit-on-9Hm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1720.289855072464" y="1097.5446428571429"/>
+            <point key="canvasLocation" x="1394" y="1140"/>
         </scene>
         <!--Completed Task View Controller-->
         <scene sceneID="Ie2-lk-8Jz">

@@ -9,7 +9,12 @@ import Foundation
 import RealmSwift
 
 class Task : Object{
+    @objc dynamic var taskId : String?
     @objc dynamic var task : String?
     @objc dynamic var priority : String?
     @objc dynamic var date : Date?
+    
+    override class func primaryKey() -> String? {
+        return "taskId"
+    }
 }

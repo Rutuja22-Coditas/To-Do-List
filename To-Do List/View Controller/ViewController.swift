@@ -46,8 +46,14 @@ class ViewController: UITabBarController {
     @objc func addButtonAction(sender: UIButton){
         
         let vC = UIStoryboard(name: "Main", bundle: nil)
-                let alertVC = vC.instantiateViewController(identifier: "AlertViewController") as? AlertViewController
+        let alertVC = vC.instantiateViewController(identifier: "AlertViewController") as? AlertViewController
+        alertVC?.caseToWorkOn = .add
         alertVC?.modalPresentationStyle = .automatic
+//        alertVC?.isDismissed = {
+//            [weak self] in
+//            let vc = CompletedTaskViewController()
+//            vc.tableView.reloadData()
+//        }
                 present(alertVC!, animated: true, completion: nil)
 //        var textField = UITextField()
 ////

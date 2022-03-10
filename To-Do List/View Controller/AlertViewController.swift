@@ -54,14 +54,19 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     var task = ""
     var priority = ""
     
-    var realmData = Task()
     let realm = try! Realm()
 
+    var caseToWorkOn:conditions?
+
+    var taskToEdit : Task?
     
-    
+    let realmData = Task()
+
+    var isDismissed: (()->Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         buttonsForDatePicker.isHidden = true
         dateFormatter.dateStyle = .medium
         dateFormatter.dateFormat = "EEEE, dd MM yyyy"
@@ -77,8 +82,28 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         okButtn.addTarget(self, action: #selector(okButtnClicked), for: .touchUpInside)
         
         print("realm", Realm.Configuration.defaultConfiguration.fileURL!)
+        
+        
+        
+        switch caseToWorkOn {
+        case .edit:
+            print("EDIT DATA")
+            addDataToEditTheTasks(task: taskToEdit!)
+        case .add:
+            print("ADD DATA")
+
+        case .none:
+            print("No changes")
+        }
+        
+        
     }
-    
+    func addDataToEditTheTasks(task:Task){
+        addTaskTxtV.text = task.task
+        priorityTxtFld.text = task.priority
+        dateTxtFld.text = dateFormatter.string(from: task.date!)
+
+    }
     func alertUI(){
         alertView.layer.cornerRadius = 10
         view.isOpaque = false
@@ -90,7 +115,7 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         priorityPickerView.layer.cornerRadius = 5
                 
     }
-    
+   
     @objc func cancelButtnCliked(){
         self.dismiss(animated: true, completion: nil)
     }
@@ -115,9 +140,10 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == priorityTxtFld{
-            priority = priorityTxtFld.text!
-            print("priority",priority)
+//            priority = priorityTxtFld.text!
+//            print("priority",priority)
             datePicker.isHidden = true
+            buttonsForDatePicker.isHidden = true
             priorityPickerView.isHidden = false
         }
         else{
@@ -130,22 +156,28 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             buttonsForDatePicker.isHidden = false
             datePicker.isHidden = false
             dateTxtFld.resignFirstResponder()
-
         }
+        else{
+            buttonsForDatePicker.isHidden = true
+            datePicker.isHidden = true
+        }
+        
+       
     }
-    
+//
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView == addTaskTxtV{
             datePicker.isHidden = true
+            buttonsForDatePicker.isHidden = true
             priorityPickerView.isHidden = true
             // view.endEditing(true)
         }
-        
+
     }
-    func textViewDidEndEditing(_ textView: UITextView) {
-        task = textView.text!
-        
-    }
+//    func textViewDidEndEditing(_ textView: UITextView) {
+//        task = textView.text!
+//
+//    }
     func setDatePicker(){
         dateTxtFld.inputView = datePicker
         datePicker.locale = .current
@@ -157,6 +189,7 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     }
 
     @objc func okButtnClicked(){
+        print("caseToWorkOn",caseToWorkOn!)
         realmData.task = addTaskTxtV.text
         realmData.priority = priorityTxtFld.text
         //print("to save date",dateTxtFld.text!)
@@ -166,23 +199,24 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
                 
         let dateInString = dateFormatter.date(from: dateTxtFld.text!)!
         realmData.date = dateInString
-        
-        //print(realmData.date!)
-        try! realm.write{
-            realm.add(realmData)
+        //if caseToWorkOn == .edit{
+        if caseToWorkOn == .add{
+            realmData.taskId = UUID().uuidString //new
+            try! realm.write{
+                realm.add(realmData)
+            }
         }
-//        let results = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true)
-//
-//        for i in results{
-//            let convertedDate = dateFormatter.string(from: i.date!)
-//            print("convertedDate",convertedDate)
-//        }
-//
-//        let a = results.sorted(by: {($0.date)!.compare($1.date!) == .orderedAscending})
-//        print("$$$$$$",a)
-        //dataSorting()
-        self.dismiss(animated: true, completion: nil)
+         else if caseToWorkOn == .edit{
+            //update directly
+            //realm.add(realmData, update: .modified)
+
+            try! realm.write{
+                realm.add(realmData, update: .modified)
+            }
+        }
         
+        self.dismiss(animated: true, completion: nil)
+        //self.isDismissed?()
         
     }
 

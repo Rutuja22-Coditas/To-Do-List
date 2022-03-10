@@ -9,9 +9,17 @@ import Foundation
 import RealmSwift
 
 struct ToDoData{
-    var date : Date
+    var date : String
+    var taskDetail : [TaskAndPriority]
+}
+
+struct TaskAndPriority {
     var priority : String
     var task : String
 }
 
+enum conditions{
+    case edit
+    case add
+}
 

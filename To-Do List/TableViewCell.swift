@@ -27,6 +27,16 @@ class TableViewCell: UITableViewCell {
     
     func setUpCell(task :Task){
         taskLbl.text = task.task
+                
+        if task.priority == "High"{
+            priorityView.backgroundColor = UIColor.red
+        }
+        else if task.priority == "Medium"{
+            priorityView.backgroundColor = UIColor.yellow
+        }
+        else if task.priority == "Low"{
+            priorityView.backgroundColor = UIColor.green
+        }
     }
     
 }
