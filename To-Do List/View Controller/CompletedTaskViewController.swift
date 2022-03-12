@@ -9,8 +9,8 @@ import UIKit
 import RealmSwift
 
 
-class CompletedTaskViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
+class CompletedTaskViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, cellImageTapDelegate {
+    
     @IBOutlet weak var tableView: UITableView!
     var editTxtFld : UITextField?
     
@@ -19,24 +19,31 @@ class CompletedTaskViewController: UIViewController, UITableViewDelegate, UITabl
     let realm = try! Realm()
     let dateFormatter = DateFormatter()
     var tasks : Results<Task>!
+    var tempTasks : Results<Task>!
     var dictionaryOfDateAndTask = [String:[Task]]()
-
+    var dictionaryForIncompleteTask = [String:[Task]]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableView), name: Notification.Name("NotificationIdentifier"), object: nil)
         dataAdd()
         setUpUI()
         tableView.register(UINib(nibName: TableViewCell.identifier, bundle: nil), forCellReuseIdentifier: TableViewCell.identifier)
             
     }
-        
+    
+    @objc func reloadTableView(){
+        dataAdd()
+        self.tableView.reloadData()
+    }
+    
     func dataAdd(){
-        tasks = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true)
-        print("tasks",tasks!)
+        tempTasks = realm.objects(Task.self).filter("taskCompleted = false")
         
         let form = DateFormatter()
         form.dateFormat = "dd MM yyyy"
-        dictionaryOfDateAndTask = Dictionary(grouping: tasks, by: {form.string(from: $0.date!)})
+
+        dictionaryOfDateAndTask = Dictionary(grouping: tempTasks, by: {form.string(from: $0.date!)})
     }
     
     func setUpUI(){
@@ -53,7 +60,12 @@ class CompletedTaskViewController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let headerToPrint = Array(dictionaryOfDateAndTask.keys)
-        return headerToPrint[section]
+        if self.tableView(tableView, numberOfRowsInSection: section) > 0{
+            return headerToPrint[section]
+        }
+        else{
+            return nil
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -65,31 +77,89 @@ class CompletedTaskViewController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.identifier, for: indexPath) as? TableViewCell
-        //let itemsForDate = groupedItems[itemDates[indexPath.section]]!.sorted(byKeyPath: "date")
-
-        //cell?.taskLbl.text = itemsForDate[indexPath.row].task
         
         let keys = Array(dictionaryOfDateAndTask.keys)
         let task = dictionaryOfDateAndTask[keys[indexPath.section]]!
         let taskToPrint = task[indexPath.row]
+        
+        cell?.imgTapDelegate = self
+        
         cell?.setUpCell(task: taskToPrint)
         return cell!
     }
-//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        toDoDataArray[section].date
-//    }
+
+    func tableCell(tableCell: UITableViewCell) {
+        let index : IndexPath = tableView.indexPath(for: tableCell)!
+        print("index",index)
+        let currentCell = tableView.cellForRow(at: index) as? TableViewCell
+        let keys = Array(dictionaryOfDateAndTask.keys)
+        let task = dictionaryOfDateAndTask[keys[index.section]]!
+        let taskToPrint = task[index.row]
+        if currentCell!.checkmarkImgV.image == UIImage(systemName: "checkmark.circle.fill"){
+                
+                try! realm.write{
+                    taskToPrint.taskCompleted = false
+                    realm.add(taskToPrint, update: .modified)
+                }
+                currentCell?.checkmarkImgV.image = UIImage(systemName: "circle")
+            }
+            else if currentCell?.checkmarkImgV.image == UIImage(systemName: "circle"){
+                try! realm.write{
+                    taskToPrint.taskCompleted = true
+                    realm.add(taskToPrint, update: .modified)
+                }
+                //taskToPrint.taskCompleted = true
+                currentCell?.checkmarkImgV.image = UIImage(systemName: "checkmark.circle.fill")
+            }
+        
+        if taskToPrint.taskCompleted == true{
+           // realm.delete(taskToPrint)
+            self.dictionaryOfDateAndTask[keys[index.section]]!.remove(at: index.row)
+        }
+        tableView.reloadData()
+    }
     
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let currentCell = tableView.cellForRow(at: indexPath)as? TableViewCell
-        if currentCell?.checkmarkImgV.image == UIImage(systemName: "checkmark.circle.fill"){
-            currentCell?.checkmarkImgV.image = UIImage(systemName: "circle")
+        let keys = Array(dictionaryOfDateAndTask.keys)
+        let task = dictionaryOfDateAndTask[keys[indexPath.section]]!
+        let taskToPrint = task[indexPath.row]
+        
+        if currentCell!.checkmarkImgV.image == UIImage(systemName: "checkmark.circle.fill"){
+                
+                try! realm.write{
+                    taskToPrint.taskCompleted = false
+                    realm.add(taskToPrint, update: .modified)
+                }
+                currentCell?.checkmarkImgV.image = UIImage(systemName: "circle")
+            }
+            else if currentCell?.checkmarkImgV.image == UIImage(systemName: "circle"){
+                try! realm.write{
+                    taskToPrint.taskCompleted = true
+                    realm.add(taskToPrint, update: .modified)
+                }
+                //taskToPrint.taskCompleted = true
+                currentCell?.checkmarkImgV.image = UIImage(systemName: "checkmark.circle.fill")
+            }
+        //taskToPrint.taskCompleted = !taskToPrint.taskCompleted
+        
+       
+        
+        //currentCell!.checkmarkImgV.image = taskToPrint.taskCompleted == true ? UIImage(systemName: "checkmark.circle.fill") : UIImage(systemName: "circle")
+        
+//        try! realm.write{
+//            //if taskToPrint.taskCompleted ==
+//            //taskToPrint.taskCompleted = !taskToPrint.taskCompleted
+//            realm.add(taskToPrint, update: .modified)
+//        }
+        if taskToPrint.taskCompleted == true{
+           // realm.delete(taskToPrint)
+            self.dictionaryOfDateAndTask[keys[indexPath.section]]!.remove(at: indexPath.row)
         }
-        else if currentCell?.checkmarkImgV.image == UIImage(systemName: "circle"){
-            currentCell?.checkmarkImgV.image = UIImage(systemName: "checkmark.circle.fill")
-        }
-         
-        //print("Priority",toDoDataArray[indexPath.section].taskData[indexPath.section].priority[indexPath.row])
+        tableView.reloadData()
+
     }
    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -116,54 +186,7 @@ class CompletedTaskViewController: UIViewController, UITableViewDelegate, UITabl
 //            }
             self.present(alertVC!, animated: true, completion: nil)
             tableView.reloadData()
-            //let alertForEdit = UIAlertController(title: "Edit", message: "Edit the task", preferredStyle: .alert)
-            //let update = UIAlertAction(title: "Update", style: .default) { (action) in
-                //let updateTask = self.editTxtFld?.text!
-                
-                //let obj = Task()
-                
-                //taskToPrint = updateTask
-                //obj.task = taskToPrint.task
-                
-//                try! self.realm.write{
-//                    //self.realm.add(obj)
-//                    taskToPrint.task = self.editTxtFld?.text
-//                    self.realm.add(taskToPrint)
-//                }
-//                tableView.reloadData()
-                
-//                let vC = UIStoryboard(name: "Main", bundle: nil)
-//                        let alertVC = vC.instantiateViewController(identifier: "AlertViewController") as? AlertViewController
-//                alertVC?.modalPresentationStyle = .automatic
-//                alertVC?.addTaskTxtV.text = taskToPrint.task
-//                alertVC?.priorityTxtFld.text = taskToPrint.priority
-//                alertVC?.okButtn.setTitle("Update", for: .normal)
-//                self.dateFormatter.dateFormat = "EEEE, dd MM yyyy"
-//                alertVC?.dateTxtFld.text = self.dateFormatter.string(from: taskToPrint.date!)
-//
-//
-//                self.present(alertVC!, animated: true, completion: nil)
-                
-  //          }
-            print("dataAfterUpdate",self.dictionaryOfDateAndTask)
             
-//            let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
-//                print("cancel")
-//            }
-            
-        
-//            alertForEdit.addTextField { (textField) in
-//                self.editTxtFld = textField
-//                self.editTxtFld?.placeholder = "Update the task"
-//                let keys = Array(self.dictionaryOfDateAndTask.keys)
-//                let task = self.dictionaryOfDateAndTask[keys[indexPath.section]]!
-//                let taskToPrint = task[indexPath.row]
-//                self.editTxtFld?.text = taskToPrint.task
-//            }
-
-            //alertForEdit.addAction(update)
-            //alertForEdit.addAction(cancel)
-            //self.present(alertForEdit, animated: true, completion: nil)
         }
 
         let delete = UIContextualAction(style: .destructive, title: "Delete") { (_, _, _) in
@@ -174,20 +197,18 @@ class CompletedTaskViewController: UIViewController, UITableViewDelegate, UITabl
             
             let taskToDelete = task[indexPath.row]
             
-            print("deletingTask***",taskToDelete)
             try! self.realm.write{
                 self.realm.delete(taskToDelete)
             }
             
             self.dictionaryOfDateAndTask[keys[indexPath.section]]!.remove(at: indexPath.row)
+            //self.dictionaryOfDateAndTask.removeAll()
+            //self.dataAdd()
 //                    try! self.realmt.write{
 //                        //self.realm.add(obj)
 //                        self.realm.delete(taskToDelete)
 //                    }
             tableView.reloadData()
-
-            
-            
             //toDoDataArray[indexPath.section].taskData.remove(at: indexPath.row)
         }
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [delete,edit])

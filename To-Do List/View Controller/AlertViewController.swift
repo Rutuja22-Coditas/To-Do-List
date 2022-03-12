@@ -28,18 +28,21 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     @IBOutlet weak var buttonsForDatePicker: UIView!
     
+    @IBOutlet weak var alertLblOfTxtV: UILabel!
+    @IBOutlet weak var alertLblOfPriorityTxtFld: UILabel!
+    @IBOutlet weak var alertLblOfDateTxtFld: UILabel!
+    
     @IBAction func doneButtnOfDatePicker(_ sender: UIButton) {
-//        dateTxtFld.text = dateFormatter.string(from: datePicker.date)
-//        print("selected date",dateTxtFld.text!)
-//        self.view.endEditing(true)
-        
+
         dateFormatter.dateStyle = .medium
         dateFormatter.dateFormat = "EEEE, dd MM yyyy"
         let date = dateFormatter.string(from: datePicker.date)
         dateTxtFld.text = date
+        alertLblOfDateTxtFld.isHidden = true
        // print("after change", dateTxtFld.text!)
         datePicker.isHidden = true
         buttonsForDatePicker.isHidden = true
+        checkForValidation()
     }
     
     @IBAction func cancelButtonOfDatePicker(_ sender: UIButton) {
@@ -51,9 +54,9 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     let dateFormatter = DateFormatter()
     
     //var date : Date? = nil
-    var task = ""
-    var priority = ""
-    
+    var task1 = ""
+    var priority1 = ""
+    var date1 = ""
     let realm = try! Realm()
 
     var caseToWorkOn:conditions?
@@ -62,10 +65,13 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     let realmData = Task()
 
-    var isDismissed: (()->Void)?
+    //var isDismissed: (()->Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        addTaskTxtV.text = "Add task"
+        addTaskTxtV.textColor = UIColor.lightGray
         
         buttonsForDatePicker.isHidden = true
         dateFormatter.dateStyle = .medium
@@ -95,15 +101,70 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         case .none:
             print("No changes")
         }
-        
-        
+        //priorityTxtFld.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .allEditingEvents)
+        //dateTxtFld.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .allEditingEvents)
+    }
+    
+//    @objc func textFieldDidChange(_ textField: UITextField){
+//        if textField == priorityTxtFld{
+//            if priorityTxtFld.text == "High" || priorityTxtFld.text == "Low" || priorityTxtFld.text == "Medium"{
+//                alertLblOfPriorityTxtFld.isHidden = true
+//            }
+//            else{
+//                alertLblOfPriorityTxtFld.isHidden = false
+//            }
+//        }
+//        if textField == dateTxtFld{
+//            if dateTxtFld.text!.count > 0{
+//                alertLblOfDateTxtFld.isHidden = true
+//            }
+//            else{
+//                alertLblOfDateTxtFld.isHidden = false
+//            }
+//        }
+//        checkForValidation()
+//    }
+    
+//    @objc func dismissKeyboard (_ sender: UITapGestureRecognizer) {
+//        addTaskTxtV.resignFirstResponder()
+//        priorityTxtFld.resignFirstResponder()
+//        dateTxtFld.resignFirstResponder()
+//    }
+
+    func textViewDidChange(_ textView: UITextView) {
+        alertLblOfTxtV.isHidden = false
+        if addTaskTxtV.text.isEmpty{
+            alertLblOfTxtV.isHidden = false
+        }
+        else{
+            alertLblOfTxtV.isHidden = true
+        }
+        checkForValidation()
+    }
+    
+    func checkForValidation(){
+        if alertLblOfTxtV.isHidden && alertLblOfPriorityTxtFld.isHidden && alertLblOfDateTxtFld.isHidden{
+            okButtn.isEnabled = true
+        }
+        else{
+            okButtn.isEnabled = false
+        }
     }
     func addDataToEditTheTasks(task:Task){
-        addTaskTxtV.text = task.task
-        priorityTxtFld.text = task.priority
-        dateTxtFld.text = dateFormatter.string(from: task.date!)
+        addTaskTxtV.textColor = UIColor.black
 
+        alertLblOfTxtV.isHidden = true
+        alertLblOfPriorityTxtFld.isHidden = true
+        alertLblOfDateTxtFld.isHidden = true
+        checkForValidation()
+        addTaskTxtV.text = task.task
+        task1 = addTaskTxtV.text
+        priorityTxtFld.text = task.priority
+        priority1 = priorityTxtFld.text!
+        dateTxtFld.text = dateFormatter.string(from: task.date!)
+        date1 = dateFormatter.string(from: task.date!)
     }
+    
     func alertUI(){
         alertView.layer.cornerRadius = 10
         view.isOpaque = false
@@ -135,13 +196,14 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         priorityTxtFld.text = dropDownArray[row]
+        alertLblOfPriorityTxtFld.isHidden = true
         pickerView.isHidden = true
+        checkForValidation()
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        
         if textField == priorityTxtFld{
-//            priority = priorityTxtFld.text!
-//            print("priority",priority)
             datePicker.isHidden = true
             buttonsForDatePicker.isHidden = true
             priorityPickerView.isHidden = false
@@ -155,7 +217,6 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 //            print("date", dateTxtFld.text!)
             buttonsForDatePicker.isHidden = false
             datePicker.isHidden = false
-            dateTxtFld.resignFirstResponder()
         }
         else{
             buttonsForDatePicker.isHidden = true
@@ -166,6 +227,15 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     }
 //
     func textViewDidBeginEditing(_ textView: UITextView) {
+//        textView.becomeFirstResponder()
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
+//        self.view.addGestureRecognizer(tapGesture)
+        if textView.textColor == UIColor.lightGray{
+            textView.text = nil
+            textView.textColor = UIColor.black
+        }
+        
+        
         if textView == addTaskTxtV{
             datePicker.isHidden = true
             buttonsForDatePicker.isHidden = true
@@ -174,10 +244,16 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         }
 
     }
-//    func textViewDidEndEditing(_ textView: UITextView) {
-//        task = textView.text!
-//
-//    }
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView == addTaskTxtV{
+            if textView.text.isEmpty {
+                  textView.text = "Add Task"
+                textView.textColor = UIColor.lightGray
+              }
+
+        }
+    }
+    
     func setDatePicker(){
         dateTxtFld.inputView = datePicker
         datePicker.locale = .current
@@ -200,60 +276,52 @@ class AlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         let dateInString = dateFormatter.date(from: dateTxtFld.text!)!
         realmData.date = dateInString
         //if caseToWorkOn == .edit{
-        if caseToWorkOn == .add{
+//        if caseToWorkOn == .add{
+//            realmData.taskId = UUID().uuidString //new
+//            try! realm.write{
+//                realm.add(realmData)
+//            }
+//        }
+//         else if caseToWorkOn == .edit{
+//            //update directly
+//            //realm.add(realmData, update: .modified)
+//
+//            try! realm.write{
+//                realm.add(realmData, update: .modified)
+//            }
+//        }
+        switch caseToWorkOn {
+        
+        case .edit:
+            if addTaskTxtV.text != task1 || priorityTxtFld.text != priority1 || dateTxtFld.text != date1{
+                try! realm.write{
+                    realm.add(realmData, update: .modified)
+                }
+            }
+            else{
+                print("data not changed")
+            }
+        case .add:
             realmData.taskId = UUID().uuidString //new
             try! realm.write{
                 realm.add(realmData)
             }
+       
+        case .none:
+            print("no case")
         }
-         else if caseToWorkOn == .edit{
-            //update directly
-            //realm.add(realmData, update: .modified)
 
-            try! realm.write{
-                realm.add(realmData, update: .modified)
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: nil)
+            self.dismiss(animated: true, completion: nil)
         }
         
-        self.dismiss(animated: true, completion: nil)
+
         //self.isDismissed?()
         
+        
     }
 
-    func dataSorting(){
-        let realm = try! Realm()
-            var groupedItems = [Date:Results<Task>]()
-            var itemDates = [Date]()
-        
-        let items = realm.objects(Task.self)
-               //Find each unique day for which an Item exists in your Realm
-               itemDates = items.reduce(into: [Date](), { results, currentItem in
-                   let date = currentItem.date!
-                   let beginningOfDay = Calendar.current.date(from: DateComponents(year: Calendar.current.component(.year, from: date), month: Calendar.current.component(.month, from: date), day: Calendar.current.component(.day, from: date), hour: 0, minute: 0, second: 0))!
-                   let endOfDay = Calendar.current.date(from: DateComponents(year: Calendar.current.component(.year, from: date), month: Calendar.current.component(.month, from: date), day: Calendar.current.component(.day, from: date), hour: 23, minute: 59, second: 59))!
-                   //Only add the date if it doesn't exist in the array yet
-                   if !results.contains(where: { addedDate->Bool in
-                       return addedDate >= beginningOfDay && addedDate <= endOfDay
-                   }) {
-                       results.append(beginningOfDay)
-                   }
-               })
-               //Filter each Item in realm based on their date property and assign the results to the dictionary
-               groupedItems = itemDates.reduce(into: [Date:Results<Task>](), { results, date in
-                   let beginningOfDay = Calendar.current.date(from: DateComponents(year: Calendar.current.component(.year, from: date), month: Calendar.current.component(.month, from: date), day: Calendar.current.component(.day, from: date), hour: 0, minute: 0, second: 0))!
-                   let endOfDay = Calendar.current.date(from: DateComponents(year: Calendar.current.component(.year, from: date), month: Calendar.current.component(.month, from: date), day: Calendar.current.component(.day, from: date), hour: 23, minute: 59, second: 59))!
-                   results[beginningOfDay] = realm.objects(Task.self).filter("date >= %@ AND date <= %@", beginningOfDay, endOfDay)
-               })
-        
-        print("grouped items",groupedItems)
-    }
-    
-    
-    func validationForTxtFields(textField: UITextField){
-        if textField.text == ""{
-            
-        }
-    }
 }
 
 
